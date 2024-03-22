@@ -1,11 +1,11 @@
-προγραμμα self
+﻿προγραμμα self
 σταθερες
     capacity = 128
 μεταβλητες
     λογικες:     stackBool[capacity], tempBool
     ακεραιες:    stackInt[capacity], stackTopBool, stackTopInt, stackTopFloat, stackTopString, argc, i, j, k, ii, jj, kk, tempInt
     πραγματικες: stackFloat[capacity]
-    χαρακτηρες:  stackString[capacity], namesBool[capacity], namesInt[capacity], namesFloat[capacity], namesString[capacity], argv[capacity]
+    χαρακτηρες:  stackString[capacity], namesBool[capacity], namesInt[capacity], namesFloat[capacity], namesString[capacity], argv[capacity], tempString
 αρχη
     ! Initialize variables.
     stackTopBool <- 0   ! Stack has zero elements.
@@ -32,21 +32,46 @@
     i <- 1
     οσο i <= argc επαναλαβε
         αν argv[i] = '<-' τοτε
-            καλεσε varIntID(argv[i - 1], tempInt)
+        	καλεσε toInt(argv[i-1],tempInt)
             αν tempInt = -1 τοτε
-                stackTopInt <- stackTopInt + 1
-                namesInt[stackTopInt] <- argv[i - 1]
-                stackInt[stackTopInt] <- toInt(argv[i + 1])
+              καλεσε varStringID(argv[i - 1], tempInt)
+              αν tempInt = -1 τοτε
+                  stackTopString <- stackTopString + 1
+                  namesString[stackTopString] <- argv[i - 1]
+                  stackString[stackTopString] <- argv[i + 1]
+              αλλιως
+              	  καλεσε toInt(argv[i+1],tempInt)
+                  stackInt[tempInt] <- tempInt
+              τελος_αν
             αλλιως
-                stackInt[tempInt] <- toInt(argv[i + 1])
+              καλεσε varIntID(argv[i - 1], tempInt)
+              αν tempInt = -1 τοτε
+                  stackTopInt <- stackTopInt + 1
+                  namesInt[stackTopInt] <- argv[i - 1]
+                  καλεσε toInt(argv[i+1],tempInt)
+                  stackInt[stackTopInt] <- tempInt
+              αλλιως
+              	  καλεσε toInt(argv[i+1],tempInt)
+                  stackInt[tempInt] <- tempInt
+              τελος_αν
             τελος_αν
             i <- i + 1
         αλλιως_αν argv[i] = 'γραψε' τοτε
-            καλεσε varIntID(argv[i + 1], tempInt)
+        	καλεσε toInt(argv[i+1],tempInt)
             αν tempInt = -1 τοτε
-                γραψε argv[i + 1]
+              καλεσε varStringID(argv[i + 1], tempInt)
+              αν tempInt = -1 τοτε
+                  γραψε argv[i + 1]
+              αλλιως
+                  γραψε stackString[tempInt]
+              τελος_αν
             αλλιως
-                γραψε stackInt[tempInt]
+              καλεσε varIntID(argv[i + 1], tempInt)
+              αν tempInt = -1 τοτε
+                  γραψε argv[i + 1]
+              αλλιως
+                  γραψε stackInt[tempInt]
+              τελος_αν
             τελος_αν
             i <- i + 1
         αλλιως_αν argv[i] = 'τελος_προγραμματος' τοτε
@@ -133,32 +158,33 @@
     τελος_επαναληψης
 τελος_διαδικασιας
 
-συναρτηση toInt(str): ακεραια
+διαδικασια toInt(str,out)
 μεταβλητες
     χαρακτηρες: str
+    ακεραιες: out
 αρχη
     επιλεξε str
         περιπτωση '0'
-            toInt <- 0
+            out <- 0
         περιπτωση '1'
-            toInt <- 1
+            out <- 1
         περιπτωση '2'
-            toInt <- 2
+            out <- 2
         περιπτωση '3'
-            toInt <- 3
+            out <- 3
         περιπτωση '4'
-            toInt <- 4
+            out <- 4
         περιπτωση '5'
-            toInt <- 5
+            out <- 5
         περιπτωση '6'
-            toInt <- 6
+            out <- 6
         περιπτωση '7'
-            toInt <- 7
+            out <- 7
         περιπτωση '8'
-            toInt <- 8
+            out <- 8
         περιπτωση '9'
-            toInt <- 9
+            out <- 9
         περιπτωση αλλιως
-            toInt <- 0
+            out <- -1
     τελος_επιλογων
-τελος_συναρτησης
+τελος_διαδικασιας
